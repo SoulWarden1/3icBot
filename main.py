@@ -58,10 +58,10 @@ async def on_ready():
 
     # Sets prefix
     if platform.system() == 'Windows':
-        bot.command_prefix = commands.when_mentioned_or('-')
+        bot.command_prefix = commands.when_mentioned_or(';')
         print("Platform: Windows")
     else:
-        bot.command_prefix = commands.when_mentioned_or('_')
+        bot.command_prefix = commands.when_mentioned_or('-')
         print("Platform: Linux")
         
     f = open("roleSelectMsgId.txt")
@@ -141,35 +141,40 @@ async def on_guild_remove(ctx, error):
 @bot.event
 async def on_raw_reaction_add(payload):
     if (
-        payload.channel_id == 1061867579733450782
+        payload.channel_id == 1061263945001877544
         and payload.message_id == bot.roleSelectMsgId
     ):  
         coalitionGuild = bot.get_guild(1061208309346078801)
         iffRole = coalitionGuild.get_role(1061228377400414289)
         cgRole = coalitionGuild.get_role(1061228513597861939)
         threeERole = coalitionGuild.get_role(1061228621022380103)
+        mercRole = coalitionGuild.get_role(1061258876181295145)
         #3e
-        if payload.emoji.id == 1061865489330094141 and iffRole not in payload.member.roles and cgRole not in payload.member.roles:
+        if payload.emoji.id == 1061865489330094141 and iffRole not in payload.member.roles and cgRole not in payload.member.roles and mercRole not in payload.member.roles:
             await payload.member.add_roles(threeERole, reason = "Giving user regiment role")
         #IFF
-        elif payload.emoji.id == 1061861221420245032 and threeERole not in payload.member.roles and cgRole not in payload.member.roles:
+        elif payload.emoji.id == 1061861221420245032 and threeERole not in payload.member.roles and cgRole not in payload.member.roles and mercRole not in payload.member.roles:
             await payload.member.add_roles(iffRole, reason = "Giving user regiment role")
         #CG
-        elif payload.emoji.id == 1061864620870074429 and iffRole not in payload.member.roles and threeERole not in payload.member.roles:
+        elif payload.emoji.id == 1061864620870074429 and iffRole not in payload.member.roles and threeERole not in payload.member.roles and mercRole not in payload.member.roles:
             await payload.member.add_roles(cgRole, reason = "Giving user regiment role")
+        #Merc
+        elif payload.emoji.name == u"\U0001FA96" and iffRole not in payload.member.roles and threeERole not in payload.member.roles and cgRole not in payload.member.roles:
+            await payload.member.add_roles(mercRole, reason = "Giving user merc role")
         
 
 
 @bot.event
 async def on_raw_reaction_remove(payload):
     if (
-        payload.channel_id == 1061867579733450782
+        payload.channel_id == 1061263945001877544
         and payload.message_id == bot.roleSelectMsgId
     ):  
         coalitionGuild = bot.get_guild(1061208309346078801)
         iffRole = coalitionGuild.get_role(1061228377400414289)
         cgRole = coalitionGuild.get_role(1061228513597861939)
         threeERole = coalitionGuild.get_role(1061228621022380103)
+        mercRole = coalitionGuild.get_role(1061258876181295145)
         member = coalitionGuild.get_member(payload.user_id)
         #3e
         if payload.emoji.id == 1061865489330094141:
@@ -180,6 +185,9 @@ async def on_raw_reaction_remove(payload):
         #CG
         elif payload.emoji.id == 1061864620870074429:
             await member.remove_roles(cgRole, reason = "Removing user regiment role")
+        #Merc
+        elif payload.emoji.name == u"\U0001FA96":
+            await member.remove_roles(mercRole, reason = "Giving user merc role")
     
 @bot.command()
 @commands.guild_only()
